@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    
+
+    
+     {
+      "name": "daemon",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceRoot}/daemon/daemon.go",
+      "env": {
+       "GOPATH": "/root/workspace/go/gopath",
+       //"PATH" : ""
+      },
+      "args": []
+     },
+     {
+        "name": "scheduler",
+        "type": "go",
+        "request": "launch",
+        "mode": "debug",
+        "program": "${workspaceRoot}/daemon/scheduler.go",
+        "env": {
+         "GOPATH": "/root/workspace/go/gopath",
+         //"PATH" : ""
+        },
+        "args": []
+       }
+    ]
+   }
