@@ -40,28 +40,40 @@ nodes:
 - role: worker
   image: kindest/node:v1.17.5@sha256:ab3f9e6ec5ad8840eeb1f76c89bb7948c77bbf76bcebe1a8b59790b8ae9a283a
   extraPortMappings:
-  - containerPort: 30000
+  - containerPort: 30000 # API SERVER NodePort
     hostPort: 30000
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
-  - containerPort: 30001
+  - containerPort: 30001 # Analytic Engine NodePort
     hostPort: 30001
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
-  - containerPort: 30002
+  - containerPort: 30002 # MetricCollector NodePort
     hostPort: 30002
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
-  - containerPort: 30003
+  - containerPort: 30003 # InfluxDB NodePort
     hostPort: 30003
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
-  - containerPort: 30004
+  - containerPort: 30004 # LoadBalancer NodePort
     hostPort: 30004
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
-  - containerPort: 30350
+  - containerPort: 30350 # Kiali NodePort
     hostPort: 30350
+    listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
+    protocol: tcp # Optional, defaults to tcp
+  - containerPort: 30901 # Postgresql NodePort
+    hostPort: 30901
+    listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
+    protocol: tcp # Optional, defaults to tcp
+  - containerPort: 30902 # Portal API NodePort
+    hostPort: 30902
+    listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
+    protocol: tcp # Optional, defaults to tcp
+  - containerPort: 30903 # Portal Web NodePort
+    hostPort: 30903
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: tcp # Optional, defaults to tcp
   extraMounts:

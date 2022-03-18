@@ -6,4 +6,5 @@ curl -LO https://github.com/kubernetes-sigs/kubefed/releases/download/v${VERSION
 tar -zxvf kubefedctl-*.tgz
 chmod u+x kubefedctl
 mv kubefedctl /usr/local/bin/
+rm kubefedctl-*.tgz
 
