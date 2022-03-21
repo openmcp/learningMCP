@@ -1,7 +1,6 @@
 #!/bin/bash
-
-HOST_IP=REPLACE_ETCDIP   # input target server IP (ex.10.0.0.226)
-HOST_NAME=REPLACE_ETCDHOSTNAME  # input target Server Hostname (ex.nanmdev6)
+HOST_IP=`ip route get 8.8.8.8 | head -1 | cut -d' ' -f8`   # input target server IP (ex.10.0.0.226)
+HOST_NAME=learningmcp  # input target Server Hostname (ex.nanmdev6)
 ETCD_VER=v3.4.3   #kube 1.17에서 사용하는 버전
 
 # choose either URL
