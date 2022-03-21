@@ -11,4 +11,5 @@ console/butterfly/*build/
 console/butterfly/*.cache/
 console/butterfly/*.env*
 console/butterfly/*.pytest_cache
+status/*
 
