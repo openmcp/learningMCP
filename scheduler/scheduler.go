@@ -151,6 +151,7 @@ func enableCors(w *http.ResponseWriter) {
 // }
 func getSchedulingReadyOpenMCP() string {
 
+	mu.Lock()
 	sortKeys := make([]string, 0, len(clusterStatusMap))
 
 	for k := range clusterStatusMap {
@@ -180,18 +181,20 @@ func getSchedulingReadyOpenMCP() string {
 
 		}
 		if findReady {
+
+			mu.Unlock()
 			return k
 		}
 
 	}
-
+	mu.Unlock()
 	return ""
 }
 
 func getSchedulingMasterIP(openmcpName string) (string, string) {
-
+	fmt.Println("!!!!!!!!!!!", openmcpName)
 	min_num := -1
-
+	mu.Lock()
 	for k, _ := range clusterStatusMap[openmcpName] {
 		n := k[len(k)-2:]
 		n_int, _ := strconv.Atoi(n)
@@ -201,13 +204,17 @@ func getSchedulingMasterIP(openmcpName string) (string, string) {
 
 		}
 	}
+
 	IP := openmcpIPMap[openmcpName]
+	fmt.Println("!!!!!!!!!!!", IP)
+	mu.Unlock()
 	return IP, "575" + fmt.Sprintf("%02d", min_num)
 }
 func getSchedulingCluster1IP(openmcpName string) (string, string) {
 
 	min_num := -1
 
+	mu.Lock()
 	for k, _ := range clusterStatusMap[openmcpName] {
 		n := k[len(k)-2:]
 		n_int, _ := strconv.Atoi(n)
@@ -218,12 +225,14 @@ func getSchedulingCluster1IP(openmcpName string) (string, string) {
 		}
 	}
 	IP := openmcpIPMap[openmcpName]
+	mu.Unlock()
 	return IP, "575" + fmt.Sprintf("%02d", min_num+1)
 }
 func getSchedulingCluster2IP(openmcpName string) (string, string) {
 
 	min_num := -1
 
+	mu.Lock()
 	for k, _ := range clusterStatusMap[openmcpName] {
 		n := k[len(k)-2:]
 		n_int, _ := strconv.Atoi(n)
@@ -234,10 +243,11 @@ func getSchedulingCluster2IP(openmcpName string) (string, string) {
 		}
 	}
 	IP := openmcpIPMap[openmcpName]
+	mu.Unlock()
 	return IP, "575" + fmt.Sprintf("%02d", min_num+2)
 }
 func getSchedulingIP() (string, string) {
-
+	mu.Lock()
 	for k, v := range clusterStatusMap {
 
 		findReady := true
@@ -263,11 +273,12 @@ func getSchedulingIP() (string, string) {
 		IP := openmcpIPMap[k]
 
 		if findReady {
+			mu.Unlock()
 			return IP, "575" + fmt.Sprintf("%02d", min_num)
 		}
 
 	}
-
+	mu.Unlock()
 	return "", ""
 }
 
