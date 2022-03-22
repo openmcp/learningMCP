@@ -14,6 +14,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/getlantern/deepcopy"
 	"github.com/joho/godotenv"
 )
 
@@ -34,7 +35,9 @@ type sshInfo struct {
 }
 
 var clusterStatusMap map[string]map[string]string
+var tmpStatusMap map[string]map[string]string
 var openmcpIPMap map[string]string
+var tmpIpMap map[string]string
 var mu sync.Mutex
 
 func (h *HttpManager) redirectMasterHandler(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +63,7 @@ func (h *HttpManager) redirectCluster2Handler(w http.ResponseWriter, r *http.Req
 
 }
 func (h *HttpManager) statusHandler(w http.ResponseWriter, r *http.Request) {
-	//fmt.Println(r.RemoteAddr)
+	fmt.Println("---StatusHandler Called")
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
 		errorResponse(w, "Content Type is not application/json", http.StatusUnsupportedMediaType)
@@ -88,27 +91,30 @@ func (h *HttpManager) statusHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//fmt.Println(s.OpenmcpName, s.ClusterName, s.Status)
-	mu.Lock()
-	if _, ok := clusterStatusMap[s.OpenmcpName]; ok {
-		clusterStatusMap[s.OpenmcpName][s.ClusterName] = s.Status
+
+	if _, ok := tmpStatusMap[s.OpenmcpName]; ok {
+		tmpStatusMap[s.OpenmcpName][s.ClusterName] = s.Status
 
 	} else {
 		tempMap := make(map[string]string)
-		clusterStatusMap[s.OpenmcpName] = tempMap
-		clusterStatusMap[s.OpenmcpName][s.ClusterName] = s.Status
+		tmpStatusMap[s.OpenmcpName] = tempMap
+		tmpStatusMap[s.OpenmcpName][s.ClusterName] = s.Status
 	}
-	if _, ok := openmcpIPMap[s.OpenmcpName]; ok {
-		openmcpIPMap[s.OpenmcpName] = s.ServerIP
+	if _, ok := tmpIpMap[s.OpenmcpName]; ok {
+		tmpIpMap[s.OpenmcpName] = s.ServerIP
 	} else {
-		openmcpIPMap = make(map[string]string)
-		openmcpIPMap[s.OpenmcpName] = s.ServerIP
+		tmpIpMap = make(map[string]string)
+		tmpIpMap[s.OpenmcpName] = s.ServerIP
 	}
 
-	for k, v := range clusterStatusMap {
+	for k, v := range tmpStatusMap {
 		for k2, v2 := range v {
 			fmt.Println("openmcp : ", k, ", cluster: ", k2, ", status: ", v2, " IP: ", s.ServerIP)
 		}
 	}
+	mu.Lock()
+	_ = deepcopy.Copy(openmcpIPMap, tmpIpMap)
+	_ = deepcopy.Copy(clusterStatusMap, tmpStatusMap)
 	mu.Unlock()
 
 	errorResponse(w, "Success", http.StatusOK)
@@ -192,6 +198,7 @@ func getSchedulingReadyOpenMCP() string {
 }
 
 func getSchedulingMasterIP(openmcpName string) (string, string) {
+
 	fmt.Println("!!!!!!!!!!!", openmcpName)
 	min_num := -1
 	mu.Lock()
