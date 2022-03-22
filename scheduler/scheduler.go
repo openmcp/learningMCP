@@ -107,15 +107,22 @@ func (h *HttpManager) statusHandler(w http.ResponseWriter, r *http.Request) {
 		tmpIpMap[s.OpenmcpName] = s.ServerIP
 	}
 
-	for k, v := range tmpStatusMap {
+	mu.Lock()
+	errCopy := deepcopy.Copy(&openmcpIPMap, &tmpIpMap)
+	if errCopy != nil {
+		fmt.Println(errCopy)
+	}
+	errCopy2 := deepcopy.Copy(&clusterStatusMap, &tmpStatusMap)
+	if errCopy2 != nil {
+		fmt.Println(errCopy2)
+	}
+	mu.Unlock()
+
+	for k, v := range clusterStatusMap {
 		for k2, v2 := range v {
 			fmt.Println("openmcp : ", k, ", cluster: ", k2, ", status: ", v2, " IP: ", s.ServerIP)
 		}
 	}
-	mu.Lock()
-	_ = deepcopy.Copy(openmcpIPMap, tmpIpMap)
-	_ = deepcopy.Copy(clusterStatusMap, tmpStatusMap)
-	mu.Unlock()
 
 	errorResponse(w, "Success", http.StatusOK)
 	return
@@ -302,7 +309,7 @@ func main() {
 	// HTTPServer_PORT := "3124"
 	// handler := http.NewServeMux()
 
-	clusterStatusMap = make(map[string]map[string]string)
+	tmpStatusMap = make(map[string]map[string]string)
 
 	// handler.HandleFunc("/status", httpManager.statusHandler)
 	// // handler.HandleFunc("/master", httpManager.redirectMasterHandler)
@@ -388,7 +395,9 @@ func main() {
 	director := func(req *http.Request) {
 		openmcpName := getSchedulingReadyOpenMCP()
 		IP, PORT := getSchedulingMasterIP(openmcpName)
-		fmt.Println(IP, PORT)
+		fmt.Println("openmcpName: ", openmcpName)
+		fmt.Println("IP: ", IP)
+		fmt.Println("PORT: ", PORT)
 
 		if req.URL.Path == "/master" {
 			IP, PORT = getSchedulingMasterIP(openmcpName)
