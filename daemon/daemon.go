@@ -47,7 +47,7 @@ var schedulerIP string
 var schedulerPort string
 
 func setConfig() {
-	schedulerIP = "10.0.3.60"
+	schedulerIP = "10.0.3.59"
 	schedulerPort = "3124"
 
 	HOME = "/home"

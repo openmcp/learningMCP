@@ -2,6 +2,8 @@
 Description=Butterfly Terminal Server
 
 [Service]
-ExecStart=/home/keti/learningMCP/console/butterfly/butterfly.server.py  --unsecure --host=0.0.0.0 --port=REPLACE_PORT_NUM --debug
+User=REPLACE_USER
+Group=keti
+ExecStart=/home/keti/learningMCP/console/butterfly/butterfly.server.py --unsecure --host=0.0.0.0 --port=REPLACE_PORT_NUM --debug
 #ExecStart=/usr/local/bin/butterfly.server.py --unsecure --host=0.0.0.0 --port=REPLACE_PORT_NUM --debug
 
