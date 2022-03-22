@@ -370,15 +370,16 @@ func main() {
 	director := func(req *http.Request) {
 		openmcpName := getSchedulingReadyOpenMCP()
 		IP, PORT := getSchedulingMasterIP(openmcpName)
-		fmt.Println(req.URL.Path)
+		fmt.Println(IP, PORT)
 
 		if req.URL.Path == "/master" {
 			IP, PORT = getSchedulingMasterIP(openmcpName)
-		} else if req.URL.Path == "/master" {
+		} else if req.URL.Path == "/cluster1" {
 			IP, PORT = getSchedulingCluster1IP(openmcpName)
-		} else if req.URL.Path == "/master" {
+		} else if req.URL.Path == "/cluster2" {
 			IP, PORT = getSchedulingCluster2IP(openmcpName)
 		}
+		fmt.Println(IP, PORT)
 
 		//PORT = "57501"
 
