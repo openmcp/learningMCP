@@ -21,5 +21,14 @@ if [ "$1" == "" ]; then
 fi
 
 num=`echo $1 | sed 's/[^0-9]//g'`
-su $1 -c "/home/keti/learningMCP/console/butterfly/butterfly.server.py --unsecure --host=0.0.0.0 --port=575$num --debug"
+#su $1 -c "/home/keti/learningMCP/console/butterfly/butterfly.server.py --unsecure --host=0.0.0.0 --port=575$num --debug"
+
+cp butterfly-template.service /etc/systemd/system/butterfly-$1.service
+sed -i 's|REPLACE_PORT_NUM|'575$num'|g' /etc/systemd/system/butterfly-$1.service
+chmod 777 /etc/systemd/system/butterfly-$1.service
+systemctl daemon-reload
+systemctl enable butterfly-$1.service
+systemctl start butterfly-$1.service
+
+#/usr/local/bin/butterfly.server.py --unsecure --host=0.0.0.0 --port=575$num --debug
 
