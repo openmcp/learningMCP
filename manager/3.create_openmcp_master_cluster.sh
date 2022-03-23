@@ -32,6 +32,6 @@ cd /home/keti/learningMCP/manager
 su $1 -c "kubectl delete validatingwebhookconfiguration validations.core.kubefed.io"
 #/home/keti/learningMCP/registry/1.master_image_load.sh $1
 
-/home/keti/learningMCP/console/run-butterfly.sh $1 &
+/home/keti/learningMCP/console/run-butterfly.sh $1
 flock -x /tmp/$1.lock -c "echo 'clusterCreated' > /home/keti/learningMCP/status/$1"
 

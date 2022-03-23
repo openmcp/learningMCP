@@ -27,6 +27,6 @@ su $1 -c "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/mast
 #su $1 -c "kubectl create -f /home/keti/learningMCP/registry/cm_registry.yaml"
 #/home/keti/learningMCP/registry/2.member_image_load.sh $1
 
-/home/keti/learningMCP/console/run-butterfly.sh $1 &
+/home/keti/learningMCP/console/run-butterfly.sh $1
 flock -x /tmp/$1.lock -c "echo 'clusterCreated' > /home/keti/learningMCP/status/$1"
 

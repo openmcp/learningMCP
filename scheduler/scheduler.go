@@ -40,6 +40,8 @@ var openmcpIPMap map[string]string
 var tmpIpMap map[string]string
 var mu sync.Mutex
 
+var tmpPath string
+
 func (h *HttpManager) redirectMasterHandler(w http.ResponseWriter, r *http.Request) {
 	openmcpName := getSchedulingReadyOpenMCP()
 	IP, PORT := getSchedulingMasterIP(openmcpName)
@@ -399,11 +401,11 @@ func main() {
 		fmt.Println("IP: ", IP)
 		fmt.Println("PORT: ", PORT)
 
-		if req.URL.Path == "/master" {
+		if tmpPath == "/master" {
 			IP, PORT = getSchedulingMasterIP(openmcpName)
-		} else if req.URL.Path == "/cluster1" {
+		} else if tmpPath == "/cluster1" {
 			IP, PORT = getSchedulingCluster1IP(openmcpName)
-		} else if req.URL.Path == "/cluster2" {
+		} else if tmpPath == "/cluster2" {
 			IP, PORT = getSchedulingCluster2IP(openmcpName)
 		}
 		fmt.Println(IP, PORT)
@@ -491,6 +493,7 @@ func handler(p *httputil.ReverseProxy) func(http.ResponseWriter, *http.Request) 
 			return
 		} else {
 			if r.URL.Path == "/master" || r.URL.Path == "/cluster1" || r.URL.Path == "/cluster2" {
+				tmpPath = r.URL.Path
 				r.URL.Path = ""
 			}
 			log.Printf("%s %s -> Cros_Proxy -> %s", r.Method, r.Host+r.URL.RequestURI(), os.Getenv("TARGET_HOST")+r.URL.RequestURI())
