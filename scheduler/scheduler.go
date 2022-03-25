@@ -122,7 +122,7 @@ func (h *HttpManager) statusHandler(w http.ResponseWriter, r *http.Request) {
 
 	for k, v := range clusterStatusMap {
 		for k2, v2 := range v {
-			fmt.Println("openmcp : ", k, ", cluster: ", k2, ", status: ", v2, " IP: ", s.ServerIP)
+			fmt.Println("openmcp : ", k, ", cluster: ", k2, ", status: ", v2, " IP: ", openmcpIPMap[k])
 		}
 	}
 
